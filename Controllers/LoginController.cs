@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Sambal.AppCode;
 using Sambal.Models;
 using System.Text;
@@ -42,6 +43,49 @@ namespace Sambal.Controllers
             return View();
         }
 
+        #endregion
+
+
+        #region "Admin-Login"
+        [Route("Admin-Login")]
+        public IActionResult AdminLogin()
+        {
+            return View();
+        }
+        #endregion
+
+
+        #region "Admin-Login"
+
+        public async Task<IActionResult> AdminLoginAuth(Login pLogin)
+        {
+            Login obj = new Login();
+            try
+            {
+                string ApiUrl = baseUrl + "api/AdminAPI/AdminLoginAPI";
+                string Json = JsonConvert.SerializeObject(pLogin);
+                StringContent con = new StringContent(Json, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage res = await _httpClient.PostAsync(ApiUrl, con);
+                if (res.IsSuccessStatusCode)
+                {
+                    dynamic resBody = res.Content.ReadAsStringAsync();
+                    obj = JsonConvert.DeserializeObject<Login>(resBody);
+
+                    if (obj.Status == true)
+                    {
+
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View();
+        }
         #endregion
 
         #region "Login Auth"
