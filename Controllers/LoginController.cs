@@ -62,22 +62,22 @@ namespace Sambal.Controllers
             Login obj = new Login();
             try
             {
-                string ApiUrl = baseUrl + "api/AdminLogin/AdminLogin";
+                string ApiUrl = baseUrl + "api/AdminLoginAPI/AdminLogin";
                 string Json = JsonConvert.SerializeObject(pLogin);
                 StringContent con = new StringContent(Json, Encoding.UTF8, "application/json");
 
                 HttpResponseMessage res = await _httpClient.PostAsync(ApiUrl, con);
                 if (res.IsSuccessStatusCode)
                 {
-                    dynamic resBody = res.Content.ReadAsStringAsync();
+                    dynamic resBody = await res.Content.ReadAsStringAsync();
                     obj = JsonConvert.DeserializeObject<Login>(resBody);
 
                     if (obj.Status == true)
                     {
-                        _clsSession.SetInt32("UserId", (int)obj.AdminDetailID);
+                        _clsSession.SetInt32("UserID", (int)obj.AdminDetailID);
                         _clsSession.SetString("Username", (string)obj.Username);
                         _clsSession.SetBool("IsSystemUser", (bool)obj.IsSystemUser);
-                        return RedirectToAction("Dasbboard", "Inventory");
+                        return RedirectToAction("DashBoard", "Inventory");
                     }
                     else
                     {

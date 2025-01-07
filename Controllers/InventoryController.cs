@@ -11,6 +11,12 @@ namespace Sambal.Controllers
         {
             return View();
         }
+
+
+        public IActionResult DashBoard()
+        {
+            return View();
+        }
     }
     public class SessionAdmin : ActionFilterAttribute
     {
@@ -24,9 +30,9 @@ namespace Sambal.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             int? UserId = _clsSession.GetInt32("UserID");
-            string Username = _clsSession.GetString("UserName");
-            string LoginType = _clsSession.GetString("LoginType");
-            if (string.IsNullOrEmpty(Username) || UserId == null || string.IsNullOrWhiteSpace(LoginType))
+            string Username = _clsSession.GetString("Username");
+            bool IsSystemUser = _clsSession.GetBool("IsSystemUser");
+            if (string.IsNullOrEmpty(Username) || UserId == null)
             {
                 _clsSession.SetString("LoginAuth", "Auth");
                 context.Result = new RedirectToActionResult("Login", "Login", null);
