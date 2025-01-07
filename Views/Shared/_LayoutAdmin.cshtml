@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sambal</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Sambal.styles.css" asp-append-version="true" />
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #f8f9fa;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 20px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+            .sidebar a:hover {
+                background-color: #ddd;
+            }
+
+        .main-content {
+            margin-left: 250px;
+            padding-top: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar.visible + .navbar {
+                display: block;
+            }
+        }
+
+        /* For larger screens: Adjust layout */
+        @@media (min-width: 769px) {
+            .navbar {
+                display: none;
+            }
+
+            .sidebar.visible + .navbar {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">Sambal Login</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between" id="navbarNav">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("DashBoard", "Inventory")">DashBoard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("InventoryManagement", "Inventory")"> Inventory Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("SalesManagement", "Sales")">Sales Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("ClientsManagement", "Clients")"> Client Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("OrderManagement", "Order")">Order Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("WarehouseManagement", "Warehouse")">Warehouse Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("ReturnManagement", "Return")">Return Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="@Url.Action("EmployeeManagement", "Employee")">Employee Management</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar hidden" id="sidebar">
+        <div class="container">
+            <p class="navbar-brand text-center">Sambal Admin</p>
+            <ul class="navbar-nav flex-column">
+                <li class="nav-item text-center">
+                    <a class="nav-link text-dark" href="@Url.Action("DashBoard", "Inventory")">DashBoard</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link text-dark" href="@Url.Action("InventoryManagement", "Inventory")"> Inventory Management</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link text-dark" href="@Url.Action("SalesManagement", "Sales")">Sales Management</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link text-dark" href="@Url.Action("ClientsManagement", "Clients")"> Client Management</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link text-dark" href="@Url.Action("OrderManagement", "Order")">Order Management</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link text-dark" href="@Url.Action("WarehouseManagement", "Warehouse")">Warehouse Management</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link text-dark" href="@Url.Action("ReturnManagement", "Return")">Return Management</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link text-dark" href="@Url.Action("EmployeeManagement", "Employee")">Employee Management</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+
+    <!-- Toggle Sidebar on small screens -->
+    <script>
+        document.querySelector('.navbar-toggler').addEventListener('click', function () {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('visible');
+        });
+    </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/toastr.min.js"></script>
+    <link href="~/js/toastr.min.css" rel="stylesheet" />
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

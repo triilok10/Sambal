@@ -17,6 +17,11 @@ namespace Sambal.Controllers
         {
             return View();
         }
+
+        public IActionResult InventoryManagement()
+        {
+            return View();
+        }
     }
     public class SessionAdmin : ActionFilterAttribute
     {
