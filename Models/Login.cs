@@ -2,19 +2,23 @@
 {
     public class Login
     {
+        //AdminDetailID 
+        public int? AdminDetailID { get; set; }
         //UserName 
-        public string Username { get; set; }
+        public string? Username { get; set; }
         //Password
-        public string Password { get; set; }
+        public string? Password { get; set; }
         //OTP
-        public string OTP { get; set; }
+        public string? OTP { get; set; }
         //ResendOTP
-        public string ResendOTP { get; set; }
+        public string? ResendOTP { get; set; }
         //DateOfBirth
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         //Status
-        public bool Status { get; set; }
+        public bool? Status { get; set; }
         //ErrMsg
-        public string ErrMsg { get; set; }
+        public string? ErrMsg { get; set; }
+        //IsSystemUser
+        public bool? IsSystemUser { get; set; }
     }
 }

@@ -62,7 +62,7 @@ namespace Sambal.Controllers
             Login obj = new Login();
             try
             {
-                string ApiUrl = baseUrl + "api/AdminAPI/AdminLoginAPI";
+                string ApiUrl = baseUrl + "api/AdminLogin/AdminLogin";
                 string Json = JsonConvert.SerializeObject(pLogin);
                 StringContent con = new StringContent(Json, Encoding.UTF8, "application/json");
 
@@ -74,17 +74,29 @@ namespace Sambal.Controllers
 
                     if (obj.Status == true)
                     {
-
+                        _clsSession.SetInt32("UserId", (int)obj.AdminDetailID);
+                        _clsSession.SetString("Username", (string)obj.Username);
+                        _clsSession.SetBool("IsSystemUser", (bool)obj.IsSystemUser);
+                        return RedirectToAction("Dasbboard", "Inventory");
+                    }
+                    else
+                    {
+                        TempData["errorMessage"] = obj.ErrMsg;
+                        return RedirectToAction("Login", "Login");
                     }
                 }
-
-
+                else
+                {
+                    TempData["errorMessage"] = "Technical issue. Please try again after some time.";
+                    return RedirectToAction("Login", "Login");
+                }
             }
             catch (Exception ex)
             {
-
+                TempData["errorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
             }
-            return View();
+
         }
         #endregion
 
