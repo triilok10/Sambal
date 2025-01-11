@@ -47,8 +47,8 @@
     .custom-file-label {
         display: inline-block;
         width: 100%;
-        padding: 10px;
-        font-size: 16px;
+        padding: 7px;
+        font-size: 14px;
         background-color: #f8f9fa;
         border: 1px solid #ced4da;
         border-radius: 5px;
@@ -61,21 +61,20 @@
             content: "Browse";
         }
 
-    /* Style when file is selected */
     .custom-file-input:valid + .custom-file-label {
         color: #28a745;
         background-color: #d4edda;
         border-color: #28a745;
     }
 
-    /* Image preview style */
+   
     #imagePreview {
         display: block;
         margin-top: 10px;
         text-align: center;
     }
 
-    /* Hide image preview initially */
+    
     #previewImage {
         max-width: 150px;
         margin-top: 10px;
@@ -131,35 +130,35 @@
     <!-- Section for Adding New Category -->
     <div class="mb-4">
         <h2>Add New Category</h2>
-        <form asp-action="AddCategory" method="post" enctype="multipart/form-data">
-            <!-- Category Title and Category Image on the same line -->
+        <form asp-asp-controller="Web" asp-action="AddCategory" method="post" enctype="multipart/form-data">
+            
             <div class="form-group d-flex flex-wrap">
 
-                <!-- Category Title Input -->
+                
                 <div class="flex-item mb-3 mb-md-0" style="flex: 1 1 48%; padding-right: 15px;">
                     <label asp-for="@Model.CategoryTitle" class="form-label">Category Title</label>
                     <input asp-for="@Model.CategoryTitle" name="CategoryTitle" class="form-control custom-input" placeholder="Please enter the Category Title!" />
                     <span asp-validation-for="@Model.CategoryTitle" class="text-danger"></span>
                 </div>
 
-                <!-- Category Image Input -->
+               
                 <div class="flex-item mb-3 mb-md-0" style="flex: 1 1 48%; padding-left: 15px;">
                     <label class="form-label">Category Image</label>
 
-                    <!-- Custom File Upload -->
+                   
                     <div class="custom-file">
                         <input type="file" name="CategoryImage" class="custom-file-input custom-input" id="categoryImageInput" />
                         <label class="custom-file-label" for="categoryImageInput">Choose file</label>
                     </div>
 
-                    <!-- Image Preview -->
+                   
                     <div id="imagePreview" class="mt-2" style="display: none;">
                         <img id="previewImage" src="" alt="Image Preview" class="img-fluid" style="max-width: 150px;" />
                     </div>
                 </div>
             </div>
             <br />
-            <!-- Submit Button -->
+            
             <div class="form-group">
                 <button type="submit" class="btn btn-success float-right">Add Category</button>
             </div>
