@@ -1,0 +1,263 @@
+﻿@model Sambal.Models.Web
+
+@{
+    ViewData["Title"] = "Category Management";
+    Layout = "_LayoutAdmin";
+
+    var list = ViewBag.lstWeb as IEnumerable<Sambal.Models.Web>;
+}
+
+<style>
+
+    .form-group.d-flex {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .form-group .flex-item {
+        display: flex;
+        flex-direction: column;
+        width: 48%;
+    }
+
+    .form-group .ml-3 {
+        margin-left: 15px;
+    }
+
+    .form-group .float-right {
+        float: right;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+
+    /* Custom file input button */
+    .custom-file {
+        position: relative;
+        width: 100%;
+    }
+
+    .custom-file-input {
+        display: none;
+    }
+
+    .custom-file-label {
+        display: inline-block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #495057;
+        text-align: center;
+    }
+
+        .custom-file-label::after {
+            content: "Browse";
+        }
+
+    /* Style when file is selected */
+    .custom-file-input:valid + .custom-file-label {
+        color: #28a745;
+        background-color: #d4edda;
+        border-color: #28a745;
+    }
+
+    /* Image preview style */
+    #imagePreview {
+        display: block;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    /* Hide image preview initially */
+    #previewImage {
+        max-width: 150px;
+        margin-top: 10px;
+        display: none;
+    }
+
+    /* Media queries */
+    @@media (min-width: 768px) {
+        .form-group .flex-item {
+            width: 48%;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .form-group.d-flex {
+            flex-direction: column;
+        }
+
+        .form-group .flex-item {
+            width: 100%;
+        }
+
+        .form-group .ml-3 {
+            margin-left: 0;
+        }
+
+        .form-group .float-right {
+            float: none;
+            text-align: center;
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .form-group .flex-item {
+            width: 100%;
+        }
+
+        .form-group .btn {
+            width: 100%;
+        }
+
+        .form-group .float-right {
+            float: none;
+            margin-top: 10px;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-center">Manage Categories</h1>
+
+    <!-- Section for Adding New Category -->
+    <div class="mb-4">
+        <h2>Add New Category</h2>
+        <form asp-action="AddCategory" method="post" enctype="multipart/form-data">
+            <!-- Category Title and Category Image on the same line -->
+            <div class="form-group d-flex flex-wrap">
+
+                <!-- Category Title Input -->
+                <div class="flex-item mb-3 mb-md-0" style="flex: 1 1 48%; padding-right: 15px;">
+                    <label asp-for="@Model.CategoryTitle" class="form-label">Category Title</label>
+                    <input asp-for="@Model.CategoryTitle" name="CategoryTitle" class="form-control custom-input" placeholder="Please enter the Category Title!" />
+                    <span asp-validation-for="@Model.CategoryTitle" class="text-danger"></span>
+                </div>
+
+                <!-- Category Image Input -->
+                <div class="flex-item mb-3 mb-md-0" style="flex: 1 1 48%; padding-left: 15px;">
+                    <label class="form-label">Category Image</label>
+
+                    <!-- Custom File Upload -->
+                    <div class="custom-file">
+                        <input type="file" name="CategoryImage" class="custom-file-input custom-input" id="categoryImageInput" />
+                        <label class="custom-file-label" for="categoryImageInput">Choose file</label>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div id="imagePreview" class="mt-2" style="display: none;">
+                        <img id="previewImage" src="" alt="Image Preview" class="img-fluid" style="max-width: 150px;" />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-success float-right">Add Category</button>
+            </div>
+        </form>
+    </div>
+
+    <br />
+
+    <h2>Existing Categories</h2>
+    <!-- Section for Listing Existing Categories -->
+    @if (list != null && list.Any())
+    {
+        <div id="categoryList">
+            @foreach (var category in list)
+            {
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>@category.CategoryTitle</h5>
+                        <button class="btn btn-danger btn-sm" asp-action="DeleteCategory" asp-route-id="@category.CategoryID">Delete</button>
+                    </div>
+
+                    <div class="card-body category-item">
+                        <div class="category-title">
+                            <span>@category.CategoryTitle</span>
+                        </div>
+                        @if (category.CategoryImage.FileName != null)
+                        {
+                            <img src="@Url.Content(category.CategoryImage.FileName)" alt="@category.CategoryTitle" />
+                        }
+
+                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editCategoryModal-@category.CategoryID">Edit</button>
+                    </div>
+                </div>
+
+                <!-- Edit Category Modal -->
+                <div class="modal fade" id="editCategoryModal-@category.CategoryID" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel-@category.CategoryID" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <form asp-action="UpdateCategory" method="post" enctype="multipart/form-data">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Category</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="Id" value="@category.CategoryID" />
+
+                                    <!-- Category Title and Category Image on the same line -->
+                                    <div class="form-group d-flex">
+                                        <!-- Category Title Input -->
+                                        <div class="flex-item">
+                                            <label asp-for="@category.CategoryTitle" class="form-label">Category Title</label>
+                                            <input asp-for="@category.CategoryTitle" name="CategoryTitle" value="@category.CategoryTitle" class="form-control" />
+                                            <span asp-validation-for="@category.CategoryTitle" class="text-danger"></span>
+                                        </div>
+
+                                        <!-- Category Image Input -->
+                                        <div class="flex-item">
+                                            <label>Update Category Image</label>
+                                            <input type="file" name="CategoryImage" class="form-control-file" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update Category</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- Message if no categories exist -->
+        <p>No categories available. Please add a new category.</p>
+    }
+</div>
+
+<script>
+    document.getElementById('categoryImageInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('previewImage');
+        const previewContainer = document.getElementById('imagePreview');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                previewContainer.style.display = 'block'; // Show the preview
+                preview.style.display = 'block'; // Ensure the image is displayed
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
