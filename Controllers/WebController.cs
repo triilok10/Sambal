@@ -41,7 +41,7 @@ namespace Sambal.Controllers
         }
 
         [HttpPost]
-        public async IActionResult AddCategory(Web pWeb, IFormFile CategoryImage)
+        public async  Task<IActionResult>  AddCategory(Web pWeb, IFormFile CategoryImage)
         {
             Web obj = new Web();
             if (pWeb == null)
