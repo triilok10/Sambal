@@ -41,7 +41,7 @@ namespace Sambal.Controllers
         }
 
         [HttpPost]
-        public async  Task<IActionResult>  AddCategory(Web pWeb, IFormFile CategoryImage)
+        public async Task<IActionResult> AddCategory(Web pWeb, IFormFile CategoryImage)
         {
             Web obj = new Web();
             if (pWeb == null)
@@ -64,11 +64,17 @@ namespace Sambal.Controllers
             }
 
             //API URL 
-            string apiURL = baseUrl + "";
+            string apiURL = baseUrl + "api/WebAPI/AddCategory";
 
             string Json = JsonConvert.SerializeObject(CategoryImage);
             StringContent con = new StringContent(Json, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _httpClient.PostAsync(apiURL, con);
+            if (response.IsSuccessStatusCode)
+            {
+                dynamic responseBody = await _httpClient.PostAsync(apiURL, con);
+                obj = JsonConvert.DeserializeObject<dynamic>(responseBody);
+            }
+
 
             return RedirectToAction("", ""); ;
         }

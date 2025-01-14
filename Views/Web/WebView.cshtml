@@ -22,6 +22,10 @@
         width: 48%;
     }
 
+    .borderDanger {
+        border: 1px solid red;
+    }
+
     .form-group .ml-3 {
         margin-left: 15px;
     }
@@ -67,14 +71,14 @@
         border-color: #28a745;
     }
 
-   
+
     #imagePreview {
         display: block;
         margin-top: 10px;
         text-align: center;
     }
 
-    
+
     #previewImage {
         max-width: 150px;
         margin-top: 10px;
@@ -130,35 +134,32 @@
     <!-- Section for Adding New Category -->
     <div class="mb-4">
         <h2>Add New Category</h2>
-        <form asp-asp-controller="Web" asp-action="AddCategory" method="post" enctype="multipart/form-data">
-            
+        <form asp-asp-controller="Web" asp-action="AddCategory" method="post" enctype="multipart/form-data" onsubmit="return js_ValidateCategory();">
+
             <div class="form-group d-flex flex-wrap">
 
-                
+
                 <div class="flex-item mb-3 mb-md-0" style="flex: 1 1 48%; padding-right: 15px;">
                     <label asp-for="@Model.CategoryTitle" class="form-label">Category Title</label>
-                    <input asp-for="@Model.CategoryTitle" name="CategoryTitle" class="form-control custom-input" placeholder="Please enter the Category Title!" />
-                    <span asp-validation-for="@Model.CategoryTitle" class="text-danger"></span>
+                    <input asp-for="@Model.CategoryTitle" name="CategoryTitle" id="CategoryTitle" class="form-control custom-input" placeholder="Please enter the Category Title!" />
                 </div>
 
-               
+
                 <div class="flex-item mb-3 mb-md-0" style="flex: 1 1 48%; padding-left: 15px;">
                     <label class="form-label">Category Image</label>
-
-                   
                     <div class="custom-file">
-                        <input type="file" name="CategoryImage" class="custom-file-input custom-input" id="categoryImageInput" />
-                        <label class="custom-file-label" for="categoryImageInput">Choose file</label>
+                        <input asp-for="CategoryImage" type="file" name="CategoryImage" class="custom-file-input custom-input" id="CategoryImage" />
+                        <label class="custom-file-label" asp-for="CategoryImage">Choose file</label>
                     </div>
 
-                   
+
                     <div id="imagePreview" class="mt-2" style="display: none;">
                         <img id="previewImage" src="" alt="Image Preview" class="img-fluid" style="max-width: 150px;" />
                     </div>
                 </div>
             </div>
             <br />
-            
+
             <div class="form-group">
                 <button type="submit" class="btn btn-success float-right">Add Category</button>
             </div>
@@ -242,8 +243,10 @@
     }
 </div>
 
-<script>
-    document.getElementById('categoryImageInput').addEventListener('change', function(event) {
+<script type="text/javascript">
+
+
+    document.getElementById('CategoryImage').addEventListener('change', function(event) {
         const file = event.target.files[0];
         const preview = document.getElementById('previewImage');
         const previewContainer = document.getElementById('imagePreview');
@@ -258,5 +261,35 @@
             reader.readAsDataURL(file);
         }
     });
+
+
+
+
+    @* Validate Category *@
+       function js_ValidateCategory() {
+
+        debugger;
+        var CategoryTitle = $("#CategoryTitle").val().trim();
+        var CategoryImage = $("#CategoryImage")[0].files.length;
+
+        if (!CategoryTitle) {
+            toastr.error("Please enter the title");
+            $("#CategoryTitle").addClass("borderDanger");
+            return false;
+        } else {
+            $("#CategoryTitle").removeClass("borderDanger");
+        }
+
+        if (CategoryImage === 0) {
+            toastr.error("Please select an image");
+            $("#CategoryImage").addClass("borderDanger");
+            return false;
+        } else {
+            $("#CategoryImage").removeClass("borderDanger");
+        }
+        return true;
+    }
+
+
 </script>
 
